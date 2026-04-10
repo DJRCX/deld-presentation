@@ -20,9 +20,6 @@ export default function ConclusionSlide() {
         transition={{ delay: 0.4 }}
         className="max-w-2xl border-t-8 border-[#ff2a2a] pt-8"
       >
-        <p className="text-2xl font-bold font-mono text-gray-400 mb-4">
-          // REMARKS
-        </p>
         <p className="text-xl">
           The 2-to-4 decoder is the fundamental bridge between binary data and physical memory selection. 
           Without it, computing at scale would be impossible.
