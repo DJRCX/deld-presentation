@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@import "@xyflow/react/dist/style.css";
+
+@theme {
+  --color-swiss-bg: #f4f4f0;
+  --color-swiss-text: #111111;
+  --color-swiss-accent: #ff2a2a;
+  --color-swiss-yellow: #ffd700;
+  
+  --font-inter: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-swiss-bg);
+    color: var(--color-swiss-text);
+    font-family: var(--font-inter);
+    overflow: hidden;
+  }
+
+  /* Remove scrollbars to enforce presentation look */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .neo-swiss-panel {
+    @apply bg-[var(--color-swiss-bg)] text-[var(--color-swiss-text)] border-4 border-[var(--color-swiss-text)] p-8 relative rounded-none;
+  }
+
+  .neo-swiss-panel-dark {
+    @apply bg-black text-[#f4f4f0] border-4 border-black p-8 relative rounded-none;
+  }
+
+  .neo-swiss-title {
+    @apply font-black tracking-tighter leading-none;
+  }
+
+  .neo-swiss-button {
+    @apply bg-[#ff2a2a] text-[#f4f4f0] border-0 px-6 py-3 font-black text-xl cursor-pointer rounded-none uppercase transition-colors hover:bg-[#111111];
+  }
+
+  .neo-swiss-badge {
+    @apply absolute top-0 right-0 bg-[#111111] text-[#ffd700] px-4 py-2 font-black uppercase;
+  }
+}
