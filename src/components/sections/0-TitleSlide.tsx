@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 
 const MEMBERS = [
-  "Sayma Ferdousi Fariha",
-  "Nosrat Tisha",
-  "Meherin Talukdar",
-  "Mahtabul Al Nahian",
-  "Golam Morshed Eashan"
+  { name: "Sayma Ferdousi Fariha", id: "252-35-103" },
+  { name: "Monjuarya Hasan Mou", id: "252-35-127" },
+  { name: "Mahtabul Al Nahian", id: "252-35-408" },
+  { name: "Nosrat Jahan Tisha", id: "252-35-289" },
+  { name: "Golam Morshed Eashan", id: "252-35-242" },
 ];
 
 export default function TitleSlide() {
@@ -39,17 +39,17 @@ export default function TitleSlide() {
       <div className="mt-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 py-12 border-t-8 border-[#111]">
         {MEMBERS.map((member, idx) => (
           <motion.div
-            key={member}
+            key={member.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 + idx * 0.1 }}
             className="flex flex-col group transition-all"
           >
-            <span className="font-mono text-[10px] text-[#ff2a2a] font-black uppercase mb-2 group-hover:scale-110 origin-left transition-transform">
-              ID.0{idx + 1}
+            <span className="font-mono text-[10px] text-[#ff2a2a] font-black uppercase mb-1 group-hover:translate-x-1 transition-transform">
+              ID: {member.id}
             </span>
             <span className="font-black text-base md:text-lg uppercase tracking-tight leading-none">
-              {member}
+              {member.name}
             </span>
           </motion.div>
         ))}

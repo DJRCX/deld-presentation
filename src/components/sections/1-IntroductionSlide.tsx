@@ -1,16 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Play, Pause, RotateCcw } from "lucide-react";
+
+const SEQUENCE = [
+  { en: 0, a: 0, b: 0, label: "SYSTEM IDLE" },
+  { en: 1, a: 0, b: 0, label: "ADDRESS 00 -> Y₀" },
+  { en: 1, a: 0, b: 1, label: "ADDRESS 01 -> Y₁" },
+  { en: 1, a: 1, b: 0, label: "ADDRESS 10 -> Y₂" },
+  { en: 1, a: 1, b: 1, label: "ADDRESS 11 -> Y₃" },
+];
 
 export default function IntroductionSlide() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      setStep((prev) => (prev + 1) % SEQUENCE.length);
+    }, 1800);
+    return () => clearInterval(timer);
+  }, [isPlaying]);
+
+  const current = SEQUENCE[step];
+  const isActive = (idx: number) => {
+    if (!current.en) return false;
+    const val = (current.a ? 2 : 0) + (current.b ? 1 : 0);
+    return val === idx;
+  };
+
   return (
-    <div className="w-full h-full flex flex-col md:flex-row gap-8 items-center bg-[#f4f4f0] text-[#111111]">
+    <div className="w-full h-full flex flex-col md:flex-row gap-8 items-center bg-[#f4f4f0] text-[#111111] overflow-hidden">
       {/* Left typographic content */}
       <div className="flex-1 max-w-2xl flex flex-col justify-center h-full pt-10">
         <motion.h2 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
           className="text-6xl md:text-8xl font-black leading-[0.85] tracking-[tightest] uppercase mb-8"
         >
           Select. <br/>
@@ -21,7 +48,7 @@ export default function IntroductionSlide() {
         <motion.div 
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
           className="border-l-8 border-[#ff2a2a] pl-6 py-2 mb-8"
         >
           <p className="text-2xl font-bold max-w-lg leading-tight">
@@ -32,51 +59,106 @@ export default function IntroductionSlide() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="font-mono text-lg bg-[#111] text-[#f4f4f0] p-6 border-l-4 border-[#ffd700]"
+          transition={{ delay: 0.2 }}
+          className="font-mono text-lg bg-[#111] text-[#f4f4f0] p-6 border-l-4 border-[#ffd700] relative"
         >
-          <h3 className="text-[#ffd700] mb-2 uppercase tracking-widest font-bold">// The Architecture</h3>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li><strong>Two inputs:</strong> A & B (The Address)</li>
-            <li><strong>One Enable pin:</strong> Master on/off switch</li>
-            <li><strong>Four outputs:</strong> Y₀, Y₁, Y₂, Y₃</li>
+          <div className="absolute top-4 right-4 text-[10px] font-black text-[#ff2a2a] animate-pulse uppercase">
+            {isPlaying ? "• AUTO_CYCLING" : "// STATIC_VIEW"}
+          </div>
+          <h3 className="text-[#ffd700] mb-4 uppercase tracking-widest font-bold">// THE ARCHITECTURE</h3>
+          <ul className="list-inside space-y-3 opacity-90">
+            <li className="flex items-center gap-3">
+              <div className={`w-3 h-3 border-2 ${current.a || current.b ? 'bg-[#ff2a2a] border-[#ff2a2a]' : 'border-white'} transition-colors`} />
+              <span><strong>Inputs A & B:</strong> The Address Line</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <div className={`w-3 h-3 border-2 ${current.en ? 'bg-[#ff2a2a] border-[#ff2a2a]' : 'border-white'} transition-colors`} />
+              <span><strong>Enable Pin:</strong> Master On/Off switch</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <div className={`w-3 h-3 border-2 ${current.en ? 'bg-[#ffd700] border-[#ffd700]' : 'border-white'} transition-colors`} />
+              <span><strong>Four Outputs:</strong> Y₀ to Y₃ (Selected Lines)</span>
+            </li>
           </ul>
         </motion.div>
       </div>
 
       {/* Right Visualization */}
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="flex-1 h-full w-full flex items-center justify-center p-4 relative min-h-[400px]"
-      >
-        {/* Block Diagram Abstract Art */}
-        <div className="w-full max-w-md aspect-square bg-[#111] neo-swiss-panel-dark relative border-[12px] border-[#111]">
-          {/* Inner Chip Core */}
-          <div className="absolute inset-8 border-4 border-[#333] flex items-center justify-center bg-[#1a1a1a]">
-            <span className="font-black text-4xl text-[#ff2a2a] tracking-widest rotate-90 md:rotate-0">DEC 2:4</span>
-          </div>
-          
-          {/* Input Pins (Left) */}
-          <div className="absolute -left-12 top-1/3 w-8 h-4 bg-[#ffd700] flex items-center pr-10 hover:w-12 transition-all cursor-crosshair">
-            <span className="absolute -left-6 font-mono text-black font-bold">A</span>
-          </div>
-          <div className="absolute -left-12 top-2/3 w-8 h-4 bg-[#ffd700] flex items-center pr-10 hover:w-12 transition-all cursor-crosshair">
-            <span className="absolute -left-6 font-mono text-black font-bold">B</span>
-          </div>
-          <div className="absolute left-1/2 -bottom-12 w-4 h-8 bg-[#ff2a2a] flex justify-center pt-10 hover:h-12 transition-all cursor-crosshair">
-            <span className="absolute -bottom-8 font-mono text-black font-bold">EN</span>
-          </div>
-
-          {/* Output Pins (Right) */}
-          {[0,1,2,3].map((i) => (
-             <div key={i} className={`absolute -right-12 w-8 h-4 bg-[#111] flex items-center pl-10`} style={{ top: `${20 + i*20}%`}}>
-                <span className="absolute -right-8 font-mono font-bold text-[#111]">Y{i}</span>
-             </div>
-          ))}
+      <div className="flex-1 w-full flex flex-col items-center justify-center gap-8 group">
+        
+        {/* Play Controller */}
+        <div className="flex items-center gap-4 bg-white border-4 border-[#111] p-2 shadow-[8px_8px_0px_#111] z-10 transition-transform hover:-translate-x-1 hover:-translate-y-1">
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            className={`flex items-center gap-3 px-6 py-3 font-black uppercase text-lg transition-all ${
+              isPlaying ? 'bg-[#111] text-white' : 'bg-[#ff2a2a] text-white hover:bg-[#111]'
+            }`}
+          >
+            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+            {isPlaying ? "Pause" : "Start Auto-Play"}
+          </button>
+          <button 
+            onClick={() => { setStep(0); setIsPlaying(false); }}
+            className="p-3 bg-[#111] text-white hover:bg-[#ffd700] hover:text-black transition-colors"
+            title="Reset to Idle"
+          >
+            <RotateCcw size={20} />
+          </button>
         </div>
-      </motion.div>
+
+        {/* Decoder Block Diagram */}
+        <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
+          
+          {/* Main Box */}
+          <div className={`w-full h-full bg-[#111] transition-all duration-500 relative border-[12px] border-[#111] flex items-center justify-center ${
+            current.en ? 'shadow-[20px_20px_0px_rgba(255,42,42,0.2)]' : 'opacity-80'
+          }`}>
+            <div className={`absolute inset-6 border-4 border-[#333] flex items-center justify-center bg-[#1a1a1a] transition-colors ${
+              current.en ? 'border-[#ff2a2a]/40 bg-[#1a1a1a]' : ''
+            }`}>
+              <div className="text-center">
+                <span className="block font-black text-5xl text-[#ff2a2a] tracking-widest mb-2">DEC 2:4</span>
+                <span className="block font-mono text-[10px] text-white/40 tracking-[0.4em] uppercase">{current.label}</span>
+              </div>
+            </div>
+            
+            {/* Input Pins (Left) - Uses RED for active address */}
+            <div className={`absolute -left-12 top-[30%] w-12 h-5 border-4 border-[#111] flex items-center transition-all duration-300 ${
+              current.a ? 'bg-[#ff2a2a]' : 'bg-[#333]'
+            }`}>
+              <span className={`absolute -left-10 font-bold font-mono transition-colors ${current.a ? 'text-[#ff2a2a] scale-125' : 'text-black/40'}`}>A</span>
+            </div>
+            <div className={`absolute -left-12 top-[70%] w-12 h-5 border-4 border-[#111] flex items-center transition-all duration-300 ${
+              current.b ? 'bg-[#ff2a2a]' : 'bg-[#333]'
+            }`}>
+              <span className={`absolute -left-10 font-bold font-mono transition-colors ${current.b ? 'text-[#ff2a2a] scale-125' : 'text-black/40'}`}>B</span>
+            </div>
+
+            {/* Enable Pin (Bottom) - Uses RED for master switch */}
+            <div className={`absolute left-1/2 -bottom-12 w-6 h-12 border-4 border-[#111] transition-all duration-300 -translate-x-1/2 ${
+              current.en ? 'bg-[#ff2a2a] h-16' : 'bg-[#333]'
+            }`}>
+              <span className={`absolute -bottom-10 left-1/2 -translate-x-1/2 font-bold font-mono transition-colors ${current.en ? 'text-[#ff2a2a] scale-125' : 'text-black/40'}`}>EN</span>
+            </div>
+
+            {/* Output Pins (Right) - Uses YELLOW for output per preference */}
+            {[0,1,2,3].map((i) => {
+              const active = isActive(i);
+              return (
+                <div 
+                  key={i} 
+                  className={`absolute -right-12 w-12 h-5 border-4 border-[#111] flex items-center transition-all duration-300 ${
+                    active ? 'bg-[#ffd700]' : 'bg-[#333]'
+                  }`} 
+                  style={{ top: `${15 + i*23}%`}}
+                >
+                  <span className={`absolute -right-10 font-bold font-mono transition-colors ${active ? 'text-[#ffd700] scale-125' : 'text-black/40'}`}>Y{i}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

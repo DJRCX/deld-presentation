@@ -70,63 +70,90 @@ export default function TruthTableSlide() {
         </table>
       </div>
 
-      {/* Right: Interactive Controls & Expression */}
-      <div className="flex-1 w-full flex flex-col gap-8 justify-center">
-        <h2 className="text-4xl md:text-6xl font-black uppercase leading-none tracking-tighter">
-          Master <br/> The Switch.
-        </h2>
-        <div className="flex flex-col gap-6">
+      {/* Right: Interactive Controls & Theory */}
+      <div className="flex-1 w-full flex flex-col gap-6 justify-center">
+        <div>
+          <h2 className="text-4xl md:text-5xl font-black uppercase leading-none tracking-tighter mb-4">
+            The Logic <br/> Blueprint.
+          </h2>
+          <p className="font-bold text-sm leading-tight text-[#555] max-w-sm border-l-4 border-[#ff2a2a] pl-4">
+            "To build a decoder, we start with a truth table — a complete list of what the circuit should do for every input combination."
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-6">
             <button 
               onClick={() => toggleInput('en')}
-              className={`w-24 h-12 border-4 border-[#111] relative transition-colors ${
+              className={`w-20 h-10 border-4 border-[#111] relative transition-colors ${
                 inputs.en ? 'bg-[#ff2a2a]' : 'bg-[#111]'
               }`}
             >
-              <div className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-white transition-all ${
-                inputs.en ? 'left-[calc(100%-2.5rem)]' : 'left-1'
+              <div className={`absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white transition-all ${
+                inputs.en ? 'left-[calc(100%-2rem)]' : 'left-1'
               }`} />
             </button>
-            <span className="font-black text-3xl font-mono">ENABLE</span>
+            <span className="font-black text-xl font-mono">ENABLE</span>
           </div>
 
-          <div className={`flex flex-col gap-6 transition-opacity ${!inputs.en ? 'opacity-30 pointer-events-none' : ''}`}>
+          <div className={`flex flex-col gap-4 transition-opacity ${!inputs.en ? 'opacity-30 pointer-events-none' : ''}`}>
             <div className="flex items-center gap-6">
               <button 
                 onClick={() => toggleInput('a')}
-                className={`w-24 h-12 border-4 border-[#111] relative transition-colors ${
+                className={`w-20 h-10 border-4 border-[#111] relative transition-colors ${
                   inputs.a ? 'bg-[#ffd700]' : 'bg-[#111]'
                 }`}
               >
-                <div className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-white transition-all ${
-                  inputs.a ? 'left-[calc(100%-2.5rem)]' : 'left-1'
+                <div className={`absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white transition-all ${
+                  inputs.a ? 'left-[calc(100%-2rem)]' : 'left-1'
                 }`} />
               </button>
-              <span className="font-black text-3xl font-mono">INPUT A</span>
+              <span className="font-black text-xl font-mono text-[#555]">INPUT A</span>
             </div>
             
             <div className="flex items-center gap-6">
               <button 
                 onClick={() => toggleInput('b')}
-                className={`w-24 h-12 border-4 border-[#111] relative transition-colors ${
+                className={`w-20 h-10 border-4 border-[#111] relative transition-colors ${
                   inputs.b ? 'bg-[#ffd700]' : 'bg-[#111]'
                 }`}
               >
-                <div className={`absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-white transition-all ${
-                  inputs.b ? 'left-[calc(100%-2.5rem)]' : 'left-1'
+                <div className={`absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white transition-all ${
+                  inputs.b ? 'left-[calc(100%-2rem)]' : 'left-1'
                 }`} />
               </button>
-              <span className="font-black text-3xl font-mono">INPUT B</span>
+              <span className="font-black text-xl font-mono text-[#555]">INPUT B</span>
             </div>
           </div>
         </div>
 
-        {/* Dynamic Expression */}
-        <div className="mt-8 p-6 border-l-8 border-[#111] bg-white">
-          <p className="text-sm font-bold text-[#888] mb-2 uppercase">Active Expression</p>
-          <div className="font-mono text-4xl font-black tracking-tight text-[#ff2a2a]">
-            {activeRow === 0 ? "OUTPUT = 0" : `Y${activeRow - 1} = ${rows[activeRow].expr}`}
+        {/* Boolean Equations Grid */}
+        <div className="mt-4">
+          <p className="text-[10px] font-black text-[#888] mb-3 uppercase tracking-widest">// BOOLEAN.EQUATIONS (MINTERMS)</p>
+          <div className="grid grid-cols-2 gap-3">
+            {rows.slice(1).map((r, i) => (
+              <div 
+                key={i} 
+                className={`p-3 border-2 transition-all duration-300 ${
+                  activeRow === i + 1 
+                    ? "bg-[#ff2a2a] border-[#ff2a2a] text-white shadow-[4px_4px_0px_#111]" 
+                    : "bg-white border-[#111] text-[#111] opacity-60"
+                }`}
+              >
+                <p className="text-[9px] font-bold uppercase mb-1">Output Y{i}</p>
+                <p className="font-mono font-black text-sm md:text-base whitespace-nowrap">
+                  {`Y${i} = ${r.expr}`}
+                </p>
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Minterm Definition */}
+        <div className="p-4 border-l-8 border-[#ffd700] bg-[#111] text-[#f4f4f0]">
+          <p className="text-xs font-bold leading-tight uppercase tracking-tight">
+            When EN is 0, the decoder is OFF. When EN is 1, exactly one output is HIGH for each input combination — each representing a <span className="text-[#ffd700]">Unique Minterm</span>.
+          </p>
         </div>
 
       </div>
