@@ -143,13 +143,27 @@ export default function IntroductionSlide() {
         <div className="flex flex-col gap-4 z-10 w-full max-w-sm">
           <div className="flex items-center justify-between bg-white border-4 border-[#111] p-2 shadow-[8px_8px_0px_#111]">
             <div className="flex gap-2">
+              <button
+                onClick={() => { setStep(step === 0 ? 1 : 0); setIsPlaying(false); }}
+                className={`px-4 h-12 flex items-center justify-center font-black transition-all border-2 ${
+                  step > 0 
+                    ? "bg-[#ff2a2a] text-white border-[#111] shadow-[2px_2px_0px_#111] -translate-x-1 -translate-y-1" 
+                    : "bg-white text-gray-300 border-gray-100 hover:border-[#ff2a2a] hover:text-[#ff2a2a]"
+                }`}
+                title={step > 0 ? "Disable Decoder" : "Enable Decoder"}
+              >
+                EN
+              </button>
+
+              <div className="w-[2px] bg-gray-100 mx-1" />
+
               {[0, 1, 2, 3].map((num) => (
                 <button
                   key={num}
                   onClick={() => { setStep(num + 1); setIsPlaying(false); }}
                   className={`w-12 h-12 flex items-center justify-center font-black transition-all border-2 ${
                     step === num + 1 
-                      ? "bg-[#ff2a2a] text-white border-[#111] shadow-[2px_2px_0px_#111] -translate-x-1 -translate-y-1" 
+                      ? "bg-[#ffd700] text-black border-[#111] shadow-[2px_2px_0px_#111] -translate-x-1 -translate-y-1" 
                       : "bg-[#f4f4f0] text-[#111] border-[#eee] hover:border-[#111]"
                   }`}
                 >
