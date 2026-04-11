@@ -35,8 +35,18 @@ const SLIDE_NAMES = [
 ];
 
 export default function PresentationController() {
-  const { currentSlide, nextSlide, prevSlide, totalSlides } = useDecoderStore();
+  const { currentSlide, nextSlide, prevSlide, totalSlides, setSlide } = useDecoderStore();
   const [mounted, setMounted] = useState(false);
+
+  const NAVIGATION_LABELS = [
+    "Overview",
+    "Intro",
+    "Logic",
+    "K-Map",
+    "Gates",
+    "Apps",
+    "Exit"
+  ];
 
   useEffect(() => {
     setMounted(true);
@@ -60,21 +70,35 @@ export default function PresentationController() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden flex bg-[#f4f4f0]">
-      {/* Top Progress / Header Bar */}
-      <div className="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center z-50">
+      {/* Top Header Bar */}
+      <div className="absolute top-0 left-0 w-full p-4 md:p-10 flex justify-between items-start z-50">
         <h1 className="font-black text-2xl tracking-tighter uppercase border-l-4 border-[#ff2a2a] pl-4">
           2-To-4 Decoder
         </h1>
-        <div className="flex gap-2">
-          {SLIDES.map((_, idx) => (
-            <div
-              key={idx}
-              className={`h-2 transition-all duration-300 ${idx === currentSlide ? "w-12 bg-[#ff2a2a]" : "w-4 bg-gray-300"}`}
-            />
-          ))}
-        </div>
-        <div className="font-mono text-sm font-bold uppercase hidden md:block">
-          SYS.0{currentSlide + 1} // {SLIDE_NAMES[currentSlide]}
+        
+        {/* Typographic Navigation */}
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-wrap justify-end gap-x-6 gap-y-2 max-w-3xl">
+            {SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSlide(idx)}
+                className={`font-mono text-[10px] md:text-[11px] font-bold uppercase transition-all flex items-center gap-2 ${
+                  idx === currentSlide 
+                    ? "text-[#ff2a2a]" 
+                    : "text-gray-400 hover:text-[#111]"
+                }`}
+              >
+                <span className={idx === currentSlide ? "opacity-100" : "opacity-30"}>0{idx + 1}.</span>
+                <span className={idx === currentSlide ? "underline decoration-2 underline-offset-8" : ""}>
+                  {NAVIGATION_LABELS[idx]}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="font-mono text-[9px] text-[#111] font-black uppercase mt-4 tracking-[0.2em] opacity-40">
+            LOADED MODULE // <span className="text-[#111] opacity-100">{SLIDE_NAMES[currentSlide]}</span>
+          </div>
         </div>
       </div>
 

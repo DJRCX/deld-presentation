@@ -84,28 +84,8 @@ export default function IntroductionSlide() {
       </div>
 
       {/* Right Visualization */}
-      <div className="flex-1 w-full flex flex-col items-center justify-center gap-8 group">
+      <div className="flex-1 w-full flex flex-col items-center justify-center gap-12 group">
         
-        {/* Play Controller */}
-        <div className="flex items-center gap-4 bg-white border-4 border-[#111] p-2 shadow-[8px_8px_0px_#111] z-10 transition-transform hover:-translate-x-1 hover:-translate-y-1">
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)}
-            className={`flex items-center gap-3 px-6 py-3 font-black uppercase text-lg transition-all ${
-              isPlaying ? 'bg-[#111] text-white' : 'bg-[#ff2a2a] text-white hover:bg-[#111]'
-            }`}
-          >
-            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-            {isPlaying ? "Pause" : "Start Auto-Play"}
-          </button>
-          <button 
-            onClick={() => { setStep(0); setIsPlaying(false); }}
-            className="p-3 bg-[#111] text-white hover:bg-[#ffd700] hover:text-black transition-colors"
-            title="Reset to Idle"
-          >
-            <RotateCcw size={20} />
-          </button>
-        </div>
-
         {/* Decoder Block Diagram */}
         <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
           
@@ -157,6 +137,48 @@ export default function IntroductionSlide() {
               );
             })}
           </div>
+        </div>
+
+        {/* Manual Logic Controller */}
+        <div className="flex flex-col gap-4 z-10 w-full max-w-sm">
+          <div className="flex items-center justify-between bg-white border-4 border-[#111] p-2 shadow-[8px_8px_0px_#111]">
+            <div className="flex gap-2">
+              {[0, 1, 2, 3].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => { setStep(num + 1); setIsPlaying(false); }}
+                  className={`w-12 h-12 flex items-center justify-center font-black transition-all border-2 ${
+                    step === num + 1 
+                      ? "bg-[#ff2a2a] text-white border-[#111] shadow-[2px_2px_0px_#111] -translate-x-1 -translate-y-1" 
+                      : "bg-[#f4f4f0] text-[#111] border-[#eee] hover:border-[#111]"
+                  }`}
+                >
+                  Y{num}
+                </button>
+              ))}
+            </div>
+            
+            <div className="h-10 w-[2px] bg-gray-200 mx-1" />
+            
+            <button 
+              onClick={() => { setStep(0); setIsPlaying(false); }}
+              className={`p-3 transition-colors ${step === 0 ? "text-[#ff2a2a]" : "text-gray-400 hover:text-[#111]"}`}
+              title="Reset to Idle"
+            >
+              <RotateCcw size={20} />
+            </button>
+          </div>
+
+          {/* Secondary Auto-Play toggle */}
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            className={`flex items-center justify-center gap-3 px-6 py-2 font-black uppercase text-sm border-2 border-[#111] transition-all shadow-[4px_4px_0px_#111] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 ${
+              isPlaying ? 'bg-[#111] text-[#ffd700]' : 'bg-white text-[#111] hover:bg-gray-50'
+            }`}
+          >
+            {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+            {isPlaying ? "Pause Cycle" : "Automate Sequence"}
+          </button>
         </div>
       </div>
     </div>
